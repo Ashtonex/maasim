@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next"; // <--- 1. NEW IMPORT
 import "./globals.css";
 
 const geistSans = Geist({
@@ -23,12 +25,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // Added suppressHydrationWarning to ignore browser extension attributes
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <Analytics />
+        <SpeedInsights /> {/* <--- 2. ADD THIS TAG HERE */}
       </body>
     </html>
   );
