@@ -19,7 +19,8 @@
     "next": "16.1.1",
     "paynow": "^2.2.2",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "react-pdf": "^10.3.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
