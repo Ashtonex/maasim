@@ -5,8 +5,7 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: '100mb', // Limit for the Server Action
     },
-    // --- ADD THIS LINE TO FIX YOUR ERROR ---
-    middlewareClientMaxBodySize: '100mb', 
+    proxyClientMaxBodySize: '100mb',
   },
   images: {
     remotePatterns: [
@@ -15,6 +14,12 @@ const nextConfig: NextConfig = {
         hostname: 'bqllrdpglkpxaohwmzgf.supabase.co',
         port: '',
         pathname: '/storage/v1/object/public/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.ytimg.com',
+        port: '',
+        pathname: '/vi/**',
       },
     ],
   },

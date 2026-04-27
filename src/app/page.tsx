@@ -1,13 +1,20 @@
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Sparkles, ArrowRight, ShoppingBag, Star, BookOpen, PlusCircle } from 'lucide-react'
+import { Sparkles, ArrowRight, ShoppingBag, Star, BookOpen, PlusCircle, PlaySquare } from 'lucide-react'
 import LogoutButton from '@/components/LogoutButton' 
+import { getYouTubeEmbedUrl, youtubeVideos } from '@/data/youtubeVideos'
 
 export const dynamic = 'force-dynamic'
 
 export default async function LandingPage() {
   const supabase = await createClient()
+  const heroVideo = youtubeVideos[0]
+  const heroVideoEmbedUrl = getYouTubeEmbedUrl(heroVideo.youtubeUrl, {
+    autoplay: true,
+    loop: true,
+    muted: true,
+  })
 
   // 1. GET USER & ROLE
   const { data: { user } } = await supabase.auth.getUser()
@@ -63,6 +70,13 @@ export default async function LandingPage() {
 
           {/* Actions */}
           <div className="flex items-center gap-3">
+            <Link
+              href="/story-screen"
+              className="hidden md:flex items-center gap-2 px-5 py-2 font-bold text-black hover:bg-maasim-pink/20 rounded-full transition border-2 border-transparent hover:border-black hover:scale-105 active:scale-95"
+            >
+              <PlaySquare size={18} />
+              Story Screen
+            </Link>
             
             {/* --- SMART ADMIN BUTTON --- */}
             {isAdmin ? (
@@ -96,14 +110,29 @@ export default async function LandingPage() {
       </nav>
 
       {/* --- HERO SECTION --- */}
-      <header className="relative pt-40 pb-20 md:pt-48 md:pb-32 px-6">
+      <header className="relative pt-40 pb-20 md:pt-48 md:pb-32 px-6 overflow-hidden">
+        {heroVideoEmbedUrl ? (
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute inset-0 bg-black/35 z-[1]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#ffffff33,transparent_45%)] z-[1]" />
+            <div className="absolute left-1/2 top-1/2 h-[130%] w-[240%] min-w-[1200px] -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0">
+              <iframe
+                className="h-full w-full scale-[1.2]"
+                src={heroVideoEmbedUrl}
+                title={`${heroVideo.title} background video`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                tabIndex={-1}
+              />
+            </div>
+          </div>
+        ) : null}
          {/* Background Elements */}
-        <div className="absolute top-20 left-[-50px] w-40 h-40 bg-maasim-cyan rounded-full border-4 border-black opacity-20 blur-sm animate-pulse" />
-        <div className="absolute bottom-20 right-[-20px] w-56 h-56 bg-maasim-pink rounded-full border-4 border-black opacity-20 blur-sm" />
+        <div className="absolute top-20 left-[-50px] w-40 h-40 bg-maasim-cyan rounded-full border-4 border-black opacity-30 blur-sm animate-pulse z-[2]" />
+        <div className="absolute bottom-20 right-[-20px] w-56 h-56 bg-maasim-pink rounded-full border-4 border-black opacity-30 blur-sm z-[2]" />
         
         {/* Floating Icons with Bounce */}
-        <Star className="absolute top-32 right-[15%] text-maasim-yellow w-12 h-12 animate-bounce hidden md:block" fill="currentColor" stroke="black" strokeWidth={3} />
-        <div className="absolute top-40 left-[10%] w-8 h-8 rounded-full bg-maasim-lime border-2 border-black hidden md:block animate-bounce delay-700" />
+        <Star className="absolute top-32 right-[15%] text-maasim-yellow w-12 h-12 animate-bounce hidden md:block z-[2]" fill="currentColor" stroke="black" strokeWidth={3} />
+        <div className="absolute top-40 left-[10%] w-8 h-8 rounded-full bg-maasim-lime border-2 border-black hidden md:block animate-bounce delay-700 z-[2]" />
 
         <div className="container mx-auto max-w-4xl text-center relative z-10">
           
@@ -114,7 +143,7 @@ export default async function LandingPage() {
           </div>
           
           {/* Big Headline */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-slate-900 leading-[0.9] mb-8 drop-shadow-sm">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-[0.9] mb-8 drop-shadow-[0_4px_18px_rgba(0,0,0,0.55)]">
             Make Reading <br />
             <span className="text-maasim-magenta relative inline-block hover:scale-110 transition-transform cursor-pointer">
               Wobbly!
@@ -124,9 +153,9 @@ export default async function LandingPage() {
             </span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-slate-800 font-bold mb-12 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-white font-bold mb-12 max-w-2xl mx-auto leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
             The digital library where stories pop, wiggle, and grow with you. 
-            <span className="block mt-2 text-slate-600 font-semibold text-lg">Pick a book and start the adventure.</span>
+            <span className="block mt-2 text-white/85 font-semibold text-lg">Pick a book and start the adventure.</span>
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
@@ -134,6 +163,9 @@ export default async function LandingPage() {
                Start Exploring
                <ArrowRight className="inline-block ml-3 group-hover:translate-x-1 transition-transform" strokeWidth={3} />
              </a>
+             <Link href="/story-screen" className="bg-white/95 text-black text-xl px-10 py-5 rounded-3xl font-black border-4 border-black shadow-[8px_8px_0px_0px_#00BCD4] hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_#00BCD4] transition-all active:scale-95">
+               Watch Stories
+             </Link>
           </div>
         </div>
       </header>
@@ -222,7 +254,7 @@ export default async function LandingPage() {
           <div className="flex justify-center gap-6 text-sm font-bold text-slate-400">
             <span className="hover:text-maasim-yellow cursor-pointer transition-colors hover:underline">Privacy</span>
             <span className="hover:text-maasim-yellow cursor-pointer transition-colors hover:underline">Terms</span>
-            <span className="hover:text-maasim-yellow cursor-pointer transition-colors hover:underline">Parent's Guide</span>
+            <span className="hover:text-maasim-yellow cursor-pointer transition-colors hover:underline">Parent&apos;s Guide</span>
           </div>
           
           <p className="mt-12 text-slate-500 font-bold text-xs">© 2026 Flectere. Built with 🍭 for Charlene.</p>
